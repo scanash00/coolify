@@ -20,8 +20,10 @@ services:
       - CACHE_DRIVER=redis
       - SESSION_DRIVER=redis
       - QUEUE_DRIVER=redis
-      - REDIS_HOST=redis
+      - REDIS_HOST=${REDIS_USERNAME}
       - REDIS_PORT=6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - DB_CONNECTION=mariadb
       - DB_HOST=database
       - DB_PORT=3306
@@ -47,14 +49,6 @@ services:
       - MARIADB_PASSWORD=${SERVICE_PASSWORD_DATABASE}
     volumes:
       - 'database:/var/lib/mysql'
-    networks:
-      - coolify
-
-  redis:
-    image: 'redis:alpine'
-    restart: always
-    volumes:
-      - 'redis:/data'
     networks:
       - coolify
 
