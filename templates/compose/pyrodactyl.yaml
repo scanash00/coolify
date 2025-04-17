@@ -20,10 +20,10 @@ services:
       - CACHE_DRIVER=redis
       - SESSION_DRIVER=redis
       - QUEUE_DRIVER=redis
-      - REDIS_HOST=redis
-      - REDIS_USERNAME=laravel
-      - REDIS_PASSWORD=${SERVICE_PASSWORD_REDIS}
+      - REDIS_HOST=${REDIS_USERNAME}
       - REDIS_PORT=6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - DB_CONNECTION=mariadb
       - DB_HOST=database
       - DB_PORT=3306
@@ -49,25 +49,6 @@ services:
       - MARIADB_PASSWORD=${SERVICE_PASSWORD_DATABASE}
     volumes:
       - 'database:/var/lib/mysql'
-    networks:
-      - coolify
-
-  redis:
-    image: redis:alpine
-    restart: always
-    entrypoint: /bin/sh
-    command: >
-      -c "
-        redis-server --daemonize yes &&
-        sleep 1 &&
-        redis-cli ACL SETUSER laravel on >${SERVICE_PASSWORD_REDIS} allkeys allcommands &&
-        redis-cli ACL DELUSER default &&
-        tail -f /dev/null
-      "
-    environment:
-      - SERVICE_PASSWORD_REDIS=${SERVICE_PASSWORD_REDIS}
-    volumes:
-      - redis:/data
     networks:
       - coolify
 
